@@ -52,5 +52,4 @@ public class TreeNode implements Comparable<TreeNode> {
     public TreeNode getRightNode() {
         return rightNode;
     }
-
 }
