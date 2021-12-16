@@ -1,5 +1,6 @@
 package ru.itis.tic.algorithm;
 
+import ru.itis.tic.model.Tree;
 import ru.itis.tic.model.TreeNode;
 
 import java.io.FileReader;
@@ -10,24 +11,31 @@ import java.util.HashMap;
 
 public class Huffman {
 
-    public TreeNode algorithm(ArrayList<TreeNode> treeNodes) {
+    public Tree algorithm(ArrayList<TreeNode> treeNodes) {
+        Tree tree = new Tree();
+
         while (treeNodes.size() > 1) {
-            Collections.sort(treeNodes);
-            TreeNode left = treeNodes.remove(treeNodes.size() - 1);
-            TreeNode right = treeNodes.remove(treeNodes.size() - 1);
+            Collections.sort(treeNodes, Collections.reverseOrder());
 
-            TreeNode parent = new TreeNode(null, right.getWeight() + left.getWeight(), left, right);
-            treeNodes.add(parent);
-        }
-        return treeNodes.get(0);
-    }
+            TreeNode rightNode = treeNodes.get(treeNodes.size() - 1);
+            TreeNode leftNode = treeNodes.get(treeNodes.size() - 2);
 
-    public String encode(String text, HashMap<Character, String> codes) {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < text.length(); i++) {
-            result.append(codes.get(text.charAt(i)));
+            TreeNode newNode = new TreeNode(
+                    null,
+                    rightNode.getFrequency() + leftNode.getFrequency(),
+                    leftNode,
+                    rightNode
+            );
+
+            treeNodes.remove(leftNode);
+            treeNodes.remove(rightNode);
+            treeNodes.add(newNode);
         }
-        return result.toString();
+
+//        System.out.println(treeNodes.get(0).getLeftNode().getLeftNode().getLeftNode().getLeftNode().getLeftNode().getLeftNode());
+        tree.setRoot(treeNodes.get(0));
+
+        return tree;
     }
 
     public static class Prepare {
@@ -46,23 +54,22 @@ public class Huffman {
             return result.toString();
         }
 
-        public HashMap<Character, Integer> getFrequency(String text) {
+        public ArrayList<TreeNode> getFrequency(String text) {
             HashMap<Character, Integer> freqMap = new HashMap<>();
+            ArrayList<TreeNode> treeNodes = new ArrayList<>();
+
             for (int i = 0; i < text.length(); i++) {
                 Character character = text.charAt(i);
                 Integer count = freqMap.get(character);
                 freqMap.put(character, count != null ? count + 1 : 1);
             }
-            return freqMap;
-        }
 
-        public ArrayList<TreeNode> getTreeNodes(HashMap<Character, Integer> freqMap) {
-            ArrayList<TreeNode> treeNodes = new ArrayList<>();
-            for (Character character : freqMap.keySet()) {
-                treeNodes.add(new TreeNode(character, freqMap.get(character)));
+            for (Character symb : freqMap.keySet()) {
+                treeNodes.add(new TreeNode(symb, freqMap.get(symb)));
             }
             return treeNodes;
         }
+
     }
 
     public static class Decode {

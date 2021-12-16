@@ -1,9 +1,11 @@
 package ru.itis.tic;
 
 import ru.itis.tic.algorithm.Huffman;
+import ru.itis.tic.model.Tree;
 import ru.itis.tic.model.TreeNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Main {
@@ -14,22 +16,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String readFile = huffmanPrepare.readFile("D:\\Another\\Univercity\\Тесты\\tic\\test.txt");
+        String source = huffmanPrepare.readFile("D:\\Another\\Univercity\\Тесты\\tic\\test.txt");
 
-        HashMap<Character, Integer> symbolsFrequency = huffmanPrepare.getFrequency(readFile);
+        ArrayList<TreeNode> freq = huffmanPrepare.getFrequency(source);
 
-        ArrayList<TreeNode> treeNodes = huffmanPrepare.getTreeNodes(symbolsFrequency);
+        Tree tree = huffman.algorithm(freq);
 
-        TreeNode rootNode = huffman.algorithm(treeNodes);
+        HashMap<Character, String> codes = tree.buildCodesFromTree();
 
-        HashMap<Character, String> codesForCharacters = rootNode.getCodesForCharacters(symbolsFrequency);
-
-        String encoded = huffman.encode(readFile, codesForCharacters);
-
-        System.out.println("Размер исходной строки " + readFile.getBytes().length * 8);
-        System.out.println("Размер исходной строки " + encoded.length());
-        System.out.println(encoded);
-
-        System.out.println(huffmanDecode.decode(encoded, codesForCharacters));
+        System.out.println(codes);
     }
 }
