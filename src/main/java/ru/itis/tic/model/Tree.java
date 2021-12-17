@@ -30,7 +30,7 @@ public class Tree {
 
     private void getAllCodes(TreeNode node, String currentCode) {
         if (node.getLeftNode() == null && node.getRightNode() == null) {
-            codes.put(node.getSymbol(), currentCode);
+            codes.put(node.getSymbol(), currentCode.equals("") ? "0" : currentCode);
         } else {
             if (node.getLeftNode() != null) {
                 getAllCodes(node.getLeftNode(), currentCode + "1");
@@ -43,7 +43,7 @@ public class Tree {
 
     private void getAllCodesForDecode(TreeNode node, String currentCode) {
         if (node.getLeftNode() == null && node.getRightNode() == null) {
-            codesForDecode.put(currentCode, node.getSymbol());
+            codesForDecode.put(currentCode.equals("") ? "0" : currentCode, node.getSymbol());
         } else {
             if (node.getLeftNode() != null) {
                 getAllCodesForDecode(node.getLeftNode(), currentCode + "1");
