@@ -51,9 +51,9 @@ public class Huffman {
         return result.toString();
     }
 
-    public void writeToFile(String path, String restoreInitText) {
+    public void writeToFile(String path, String encoded) {
         try (FileWriter writer = new FileWriter(path, false)) {
-            writer.write(restoreInitText);
+            writer.write(encoded);
             writer.flush();
         } catch (IOException ex) {
 

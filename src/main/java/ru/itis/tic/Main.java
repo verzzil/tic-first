@@ -50,7 +50,5 @@ public class Main {
 
             huffmanDecode.writeToFile("./decoderResult.txt", decode);
         }
-
-
     }
 }

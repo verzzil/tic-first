@@ -6,7 +6,7 @@ public class Tree {
 
     private TreeNode root;
     private HashMap<Character, String> codes;
-    private HashMap<String, Character> codesForDecode = new HashMap<>();
+    private HashMap<String, Character> codesForDecode;
 
     public TreeNode getRoot() {
         return root;
