@@ -153,7 +153,7 @@ public class Huffman {
             String[] splitFrequenciesWithEncoded = rawData.split("-----");
             String[] rawFrequencies = splitFrequenciesWithEncoded[0]
                     .replaceAll("[}{](?!=)", "")
-                    .split("(?<! ) ");
+                    .split("(?<=,) ");
 
             for (int i = 0; i < rawFrequencies.length; i++) {
                 String[] temp = rawFrequencies[i].split("=(?=\\d)");
