@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 public class Huffman {
 
-    public Tree buildTree(HashMap<Character, Integer> freq) {
+    public Tree buildTree(HashMap<String, Integer> freq) {
 
         ArrayList<TreeNode> treeNodes = getArrayFromFreq(freq);
         Tree tree = new Tree();
@@ -25,7 +25,7 @@ public class Huffman {
             TreeNode rightNode = treeNodes.get(treeNodes.size() - 2);
 
             TreeNode newNode = new TreeNode(
-                    ' ',
+                    "",
                     rightNode.getFrequency() + leftNode.getFrequency(),
                     leftNode,
                     rightNode
@@ -41,11 +41,13 @@ public class Huffman {
         return tree;
     }
 
-    public String encode(String sourceData, HashMap<Character, String> codes) {
+    public String encode(String sourceData, HashMap<String, String> codes) {
         StringBuilder result = new StringBuilder();
 
-        for (int i = 0; i < sourceData.length(); i++) {
-            result.append(codes.get(sourceData.charAt(i)));
+        for (int i = 0; i < sourceData.length();) {
+            int utf8Code = sourceData.codePointAt(i);
+            result.append(codes.get(sourceData.substring(i, i + Character.charCount(utf8Code))));
+            i += Character.charCount(utf8Code);
         }
 
         return result.toString();
@@ -61,9 +63,9 @@ public class Huffman {
         }
     }
 
-    private ArrayList<TreeNode> getArrayFromFreq(HashMap<Character, Integer> freq) {
+    private ArrayList<TreeNode> getArrayFromFreq(HashMap<String, Integer> freq) {
         ArrayList<TreeNode> treeNodes = new ArrayList<>();
-        for (Character symb : freq.keySet()) {
+        for (String symb : freq.keySet()) {
             treeNodes.add(new TreeNode(symb, freq.get(symb)));
         }
         return treeNodes;
@@ -85,13 +87,15 @@ public class Huffman {
             return result.toString();
         }
 
-        public HashMap<Character, Integer> getFrequency(String text) {
-            HashMap<Character, Integer> freq = new HashMap<>();
+        public HashMap<String, Integer> getFrequency(String text) {
+            HashMap<String, Integer> freq = new HashMap<>();
 
-            for (int i = 0; i < text.length(); i++) {
-                Character character = text.charAt(i);
+            for (int i = 0; i < text.length();) {
+                int utf8Code = text.codePointAt(i);
+                String character = text.substring(i, i + Character.charCount(utf8Code));
                 Integer count = freq.get(character);
                 freq.put(character, count != null ? count + 1 : 1);
+                i += Character.charCount(utf8Code);
             }
 
             return freq;
@@ -101,7 +105,7 @@ public class Huffman {
 
     public static class Decode {
 
-        public Tree buildTree(HashMap<Character, Integer> freq) {
+        public Tree buildTree(HashMap<String, Integer> freq) {
 
             ArrayList<TreeNode> treeNodes = getArrayFromFreq(freq);
             Tree tree = new Tree();
@@ -113,7 +117,7 @@ public class Huffman {
                 TreeNode rightNode = treeNodes.get(treeNodes.size() - 2);
 
                 TreeNode newNode = new TreeNode(
-                        ' ',
+                        "",
                         rightNode.getFrequency() + leftNode.getFrequency(),
                         leftNode,
                         rightNode
@@ -130,7 +134,7 @@ public class Huffman {
         }
 
 
-        public String decode(String encode, HashMap<String, Character> codesForCharacters) {
+        public String decode(String encode, HashMap<String, String> codesForCharacters) {
             StringBuilder result = new StringBuilder();
 
             StringBuilder temp = new StringBuilder();
@@ -144,28 +148,6 @@ public class Huffman {
             }
 
             return result.toString();
-         }
-
-        private Pair<HashMap<Character, Integer>, String> getDataFromRawData(String rawData) {
-            HashMap<Character, Integer> frequencies = new HashMap<>();
-            String encoded;
-
-            String[] splitFrequenciesWithEncoded = rawData.split("-----");
-            String[] rawFrequencies = splitFrequenciesWithEncoded[0]
-                    .replaceAll("[}{](?!=)", "")
-                    .split("(?<=,) ");
-
-            for (int i = 0; i < rawFrequencies.length; i++) {
-                String[] temp = rawFrequencies[i].split("=(?=\\d)");
-                frequencies.put(
-                        temp[0].replaceAll("\r\n", "\n").charAt(0),
-                        Integer.parseInt(temp[1].replaceAll(",", ""))
-                );
-            }
-
-            encoded = splitFrequenciesWithEncoded[1];
-
-            return new Pair<>(frequencies, encoded);
         }
 
         public void writeToFile(String path, String data) {
@@ -179,7 +161,7 @@ public class Huffman {
             }
         }
 
-        public Pair<HashMap<Character, Integer>, String> readFile(String path) {
+        public Pair<HashMap<String, Integer>, String> readFile(String path) {
             StringBuilder result = new StringBuilder();
             try (FileReader reader = new FileReader(path)) {
                 int c;
@@ -193,9 +175,31 @@ public class Huffman {
             return getDataFromRawData(result.toString());
         }
 
-        private ArrayList<TreeNode> getArrayFromFreq(HashMap<Character, Integer> freq) {
+        private Pair<HashMap<String, Integer>, String> getDataFromRawData(String rawData) {
+            HashMap<String, Integer> frequencies = new HashMap<>();
+            String encoded;
+
+            String[] splitFrequenciesWithEncoded = rawData.split("-----");
+            String[] rawFrequencies = splitFrequenciesWithEncoded[0]
+                    .replaceAll("[}{](?!=)", "")
+                    .split("(?<=,) ");
+
+            for (int i = 0; i < rawFrequencies.length; i++) {
+                String[] temp = rawFrequencies[i].split("=(?=\\d)");
+                frequencies.put(
+                        temp[0].replaceAll("\r\n", "\n"),
+                        Integer.parseInt(temp[1].replaceAll(",", ""))
+                );
+            }
+
+            encoded = splitFrequenciesWithEncoded[1];
+
+            return new Pair<>(frequencies, encoded);
+        }
+
+        private ArrayList<TreeNode> getArrayFromFreq(HashMap<String, Integer> freq) {
             ArrayList<TreeNode> treeNodes = new ArrayList<>();
-            for (Character symb : freq.keySet()) {
+            for (String symb : freq.keySet()) {
                 treeNodes.add(new TreeNode(symb, freq.get(symb)));
             }
             return treeNodes;

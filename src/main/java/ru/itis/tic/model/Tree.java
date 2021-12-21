@@ -5,8 +5,8 @@ import java.util.HashMap;
 public class Tree {
 
     private TreeNode root;
-    private HashMap<Character, String> codes;
-    private HashMap<String, Character> codesForDecode;
+    private HashMap<String, String> codes;
+    private HashMap<String, String> codesForDecode;
 
     public TreeNode getRoot() {
         return root;
@@ -16,13 +16,13 @@ public class Tree {
         this.root = root;
     }
 
-    public HashMap<Character, String> buildCodesFromTree() {
+    public HashMap<String, String> buildCodesFromTree() {
         codes = new HashMap<>();
         getAllCodes(root, "");
         return codes;
     }
 
-    public HashMap<String, Character> buildCodesFromTreeForDecode() {
+    public HashMap<String, String> buildCodesFromTreeForDecode() {
         codesForDecode = new HashMap<>();
         getAllCodesForDecode(root, "");
         return codesForDecode;

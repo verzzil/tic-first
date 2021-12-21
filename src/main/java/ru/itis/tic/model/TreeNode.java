@@ -2,17 +2,17 @@ package ru.itis.tic.model;
 
 public class TreeNode implements Comparable<TreeNode> {
 
-    private Character symbol;
+    private String symbol;
     private Integer frequency;
     private TreeNode leftNode;
     private TreeNode rightNode;
 
-    public TreeNode(Character symbol, Integer frequency) {
+    public TreeNode(String symbol, Integer frequency) {
         this.symbol = symbol;
         this.frequency = frequency;
     }
 
-    public TreeNode(Character s, Integer f, TreeNode l, TreeNode r) {
+    public TreeNode(String s, Integer f, TreeNode l, TreeNode r) {
         symbol = s;
         frequency = f;
         leftNode = l;
@@ -37,7 +37,7 @@ public class TreeNode implements Comparable<TreeNode> {
                 '}';
     }
 
-    public Character getSymbol() {
+    public String getSymbol() {
         return symbol;
     }
 

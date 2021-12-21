@@ -27,24 +27,31 @@ public class Main {
 
             String source = huffmanPrepare.readFile(path);
 
-            HashMap<Character, Integer> freq = huffmanPrepare.getFrequency(source);
+            HashMap<String, Integer> freq = huffmanPrepare.getFrequency(source);
 
             Tree tree = huffman.buildTree(freq);
 
-            HashMap<Character, String> codes = tree.buildCodesFromTree();
+            HashMap<String, String> codes = tree.buildCodesFromTree();
 
             String encode = huffman.encode(source, codes);
 
             huffman.writeToFile("./coderResult.txt", freq + "-----" + encode);
-        } else if (mode == 2) {
-            Pair<HashMap<Character, Integer>, String> data = huffmanDecode.readFile("./coderResult.txt");
 
-            HashMap<Character, Integer> frequencies = data.getKey();
+            System.out.println("Коды");
+
+            System.out.println(codes);
+
+            scan.nextLine();
+            scan.nextLine();
+        } else if (mode == 2) {
+            Pair<HashMap<String, Integer>, String> data = huffmanDecode.readFile("./coderResult.txt");
+
+            HashMap<String, Integer> frequencies = data.getKey();
             String encoded = data.getValue();
 
             Tree tree = huffmanDecode.buildTree(frequencies);
 
-            HashMap<String, Character> codes = tree.buildCodesFromTreeForDecode();
+            HashMap<String, String> codes = tree.buildCodesFromTreeForDecode();
 
             String decode = huffmanDecode.decode(encoded, codes);
 
